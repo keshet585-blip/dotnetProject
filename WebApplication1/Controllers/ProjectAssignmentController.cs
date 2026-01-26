@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Clean.CORE.Entities;
-using Clean.SERVICE;
-using System.Linq;
-using System.Collections.Generic;
 using Clean.CORE.Services;
+using System;
+using AutoMapper;
+using Clean.API.Models;
+using Clean.CORE.DTO;
 
 namespace WebApplication1.Controllers
 {
@@ -16,14 +17,16 @@ namespace WebApplication1.Controllers
     public class ProjectAssignmentController : ControllerBase
     {
         private readonly IProjectAssignmentService _service;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// קונסטרקטור - מקבל את מקור הנתונים דרך Dependency Injection
         /// </summary>
         /// <param name="service">מקור הנתונים המוזרק</param>
-        public ProjectAssignmentController(IProjectAssignmentService service)
+        public ProjectAssignmentController(IProjectAssignmentService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -49,12 +52,32 @@ namespace WebApplication1.Controllers
         }
 
         /// <summary>
+        /// שליפת כל השיוכים של עובד מסוים
+        /// </summary>
+        [HttpGet("by-employee/{employeeId}")]
+        public IActionResult GetAssignmentsByEmployee(int employeeId)
+        {
+            var list = _service.GetAssignmentsByEmployee(employeeId);
+            return Ok(list);
+        }
+
+        /// <summary>
+        /// שליפת כל השיוכים של פרויקט מסוים
+        /// </summary>
+        [HttpGet("by-project/{projectId}")]
+        public IActionResult GetAssignmentsByProject(int projectId)
+        {
+            var list = _service.GetAssignmentsByProject(projectId);
+            return Ok(list);
+        }
+
+        /// <summary>
         /// הוספת שיוך חדש בין עובד לפרויקט
         /// </summary>
         [HttpPost]
-        public IActionResult AddAssignment(ProjectAssignment assignment)
+        public IActionResult AddAssignment(ProjectAssignmentPost assignment)
         {
-            var added = _service.Add(assignment);
+            var added = _service.Add(_mapper.Map<ProjectAssignment>(assignment));
             return Ok(added);
         }
 
@@ -62,9 +85,9 @@ namespace WebApplication1.Controllers
         /// עדכון נתוני שיוך קיים
         /// </summary>
         [HttpPut("{id}")]
-        public IActionResult UpdateAssignment(int id, ProjectAssignment updated)
+        public IActionResult UpdateAssignment(int id, ProjectAssignmentPost updated)
         {
-            var assignment = _service.Update(id, updated);
+            var assignment = _service.Update(id, _mapper.Map<ProjectAssignment>(updated));
             if (assignment == null)
                 return NotFound("שיוך לא נמצא");
 
@@ -82,16 +105,6 @@ namespace WebApplication1.Controllers
                 return NotFound("שיוך לא נמצא");
 
             return Ok("נמחק בהצלחה");
-        }
-
-        /// <summary>
-        /// פעולה נוספת: שליפת כל השיוכים של פרויקט מסוים
-        /// </summary>
-        [HttpGet("by-project/{projectId}")]
-        public IActionResult GetAssignmentsByProject(int projectId)
-        {
-            var list = _service.GetByProject(projectId);
-            return Ok(list);
         }
     }
 }

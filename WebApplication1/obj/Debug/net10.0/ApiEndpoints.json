@@ -19,7 +19,7 @@
     "Parameters": [
       {
         "Name": "assignment",
-        "Type": "Clean.CORE.Entities.ProjectAssignment",
+        "Type": "Clean.API.Models.ProjectAssignmentPost",
         "IsRequired": true
       }
     ],
@@ -56,7 +56,7 @@
       },
       {
         "Name": "updated",
-        "Type": "Clean.CORE.Entities.ProjectAssignment",
+        "Type": "Clean.API.Models.ProjectAssignmentPost",
         "IsRequired": true
       }
     ],
@@ -72,6 +72,22 @@
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.ProjectAssignmentController",
+    "Method": "GetAssignmentsByEmployee",
+    "RelativePath": "api/assignments/by-employee/{employeeId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "employeeId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -114,7 +130,7 @@
     "Parameters": [
       {
         "Name": "employee",
-        "Type": "Clean.CORE.Entities.Employee",
+        "Type": "Clean.API.Models.EmployeePost",
         "IsRequired": true
       }
     ],
@@ -151,7 +167,7 @@
       },
       {
         "Name": "updated",
-        "Type": "Clean.CORE.Entities.Employee",
+        "Type": "Clean.API.Models.EmployeePost",
         "IsRequired": true
       }
     ],
@@ -162,6 +178,22 @@
     "Method": "DeleteEmployee",
     "RelativePath": "api/employees/{id}",
     "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.EmployeeController",
+    "Method": "GetEmployeeWithAssignments",
+    "RelativePath": "api/employees/{id}/assignments",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -209,7 +241,7 @@
     "Parameters": [
       {
         "Name": "project",
-        "Type": "Clean.CORE.Entities.Project",
+        "Type": "Clean.API.Models.ProjectPost",
         "IsRequired": true
       }
     ],
@@ -246,7 +278,7 @@
       },
       {
         "Name": "updated",
-        "Type": "Clean.CORE.Entities.Project",
+        "Type": "Clean.API.Models.ProjectPost",
         "IsRequired": true
       }
     ],
@@ -257,6 +289,22 @@
     "Method": "DeleteProject",
     "RelativePath": "api/projects/{id}",
     "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.ProjectController",
+    "Method": "GetProjectByIdWithAssignments",
+    "RelativePath": "api/projects/{id}/assignments",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -282,6 +330,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.ProjectController",
+    "Method": "GetAllWithAssignments",
+    "RelativePath": "api/projects/with-assignments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   }
 ]

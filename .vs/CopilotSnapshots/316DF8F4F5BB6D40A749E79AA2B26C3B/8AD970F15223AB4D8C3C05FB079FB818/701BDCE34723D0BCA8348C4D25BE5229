@@ -1,0 +1,28 @@
+﻿using Clean.CORE.Entities;
+using Clean.CORE.DTO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Clean.CORE.Services
+{
+    public interface IProjectService
+    {
+
+        public IEnumerable<ProjectDto> GetAll();
+
+        public ProjectDto? GetById(int id);
+
+        public ProjectDto Add(Project project);
+
+        public ProjectDto? Update(int id, Project updated);
+
+        public bool Delete(int id);
+
+        public IEnumerable<ProjectDto> Search(string keyword);
+        public ProjectDto? GetByIdWithAssignments(int id);
+        public IEnumerable<ProjectDto> GetAllWithAssignments();
+    }
+}

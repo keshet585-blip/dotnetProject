@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Clean.CORE.Entities;
+﻿using Clean.CORE.Entities;
 using Clean.CORE.IRepositories;
 using Clean.DATA.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Clean.DATA.Repositories
 {
@@ -10,14 +11,31 @@ namespace Clean.DATA.Repositories
     {
         private readonly IDataContext _context;
 
-        public ProjectRepository(DataContext context): base(context) {}
-
+        public ProjectRepository(DataContext context): base(context) {
+            _context = context;
+        }
 
 
         public IEnumerable<Project> SearchProject(string keyword)
         {
             return _context.Projects
                 .Where(p => p.Name.Contains(keyword, System.StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IEnumerable<Project> GetAllWithAssignments()
+        {
+            return _context.Projects
+              .Include(p =>  p.Assignments)
+              .ThenInclude(a => a.Employee)
+              .ToList();
+        }
+
+        public Project? GetByIdWithAssignments(int id)
+        {
+            return _context.Projects
+                     .Include(p => p.Assignments)
+                     .ThenInclude(a => a.Employee)
+                     .FirstOrDefault(p => p.Id == id);
         }
     }
 }

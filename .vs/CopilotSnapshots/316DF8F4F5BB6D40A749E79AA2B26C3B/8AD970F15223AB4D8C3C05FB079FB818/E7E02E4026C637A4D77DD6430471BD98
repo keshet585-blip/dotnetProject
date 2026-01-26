@@ -1,0 +1,74 @@
+﻿using System.Collections.Generic;
+using Clean.DATA.Repositories;
+using Clean.CORE.Entities;
+using Clean.CORE.IRepositories;
+using Clean.CORE.Services;
+using Clean.CORE.Repositories;
+using AutoMapper;
+using Clean.CORE.DTO;
+
+namespace Clean.SERVICE
+{
+    public class ProjectAssignmentService:IProjectAssignmentService
+    {
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+
+        public ProjectAssignmentService(IRepositoryManager repository, IMapper mapper)
+        {
+            _repositoryManager = repository;
+            _mapper = mapper;
+        }
+
+        public IEnumerable<ProjectAssignementDto> GetAll()
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAll();
+            return _mapper.Map<IEnumerable<ProjectAssignementDto>>(list);
+        }
+
+        public ProjectAssignementDto? GetById(int id)
+        {
+            var item = _repositoryManager.ProjectAssignments.GetById(id);
+            return _mapper.Map<ProjectAssignementDto>(item);
+        }
+
+        public ProjectAssignementDto Add(ProjectAssignment assignment)
+        {
+            var newAssignment = _repositoryManager.ProjectAssignments.Add(assignment);
+            _repositoryManager.Save();
+            return _mapper.Map<ProjectAssignementDto>(newAssignment);
+        }
+
+        public ProjectAssignementDto? Update(int id, ProjectAssignment updated)
+        {
+            var tmp=_repositoryManager.ProjectAssignments.Update(id, updated);
+            _repositoryManager.Save();
+            return _mapper.Map<ProjectAssignementDto>(tmp);
+        }
+
+        public bool Delete(int id)
+        {
+            var isDeleted = _repositoryManager.ProjectAssignments.Delete(id);
+            if (isDeleted) _repositoryManager.Save();
+            return isDeleted;
+        }
+
+        public IEnumerable<ProjectAssignementDto> GetByProject(int projectId)
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAssignmentsByProject(projectId);
+            return _mapper.Map<IEnumerable<ProjectAssignementDto>>(list);
+        }
+
+        public IEnumerable<ProjectAssignementDto> GetAssignmentsByEmployee(int employeeId)
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAssignmentsByEmployee(employeeId);
+            return _mapper.Map<IEnumerable<ProjectAssignementDto>>(list);
+      }
+
+        public IEnumerable<ProjectAssignementDto> GetAssignmentsByProject(int projectId)
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAssignmentsByProject(projectId);
+            return _mapper.Map<IEnumerable<ProjectAssignementDto>>(list);
+        }
+    }
+}

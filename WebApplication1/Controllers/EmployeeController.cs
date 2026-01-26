@@ -5,7 +5,9 @@ using Clean.SERVICE;
 using System.Linq;
 using System;
 using Clean.CORE.Services;
-
+using Clean.CORE.DTO;
+using AutoMapper;
+using Clean.API.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -17,9 +19,11 @@ namespace WebApplication1.Controllers
     {
         private readonly IEmployeeService _service;
 
-        public EmployeeController(IEmployeeService service)
+        private readonly IMapper _mapper;
+        public EmployeeController(IEmployeeService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
             /// <summary>
@@ -45,12 +49,35 @@ namespace WebApplication1.Controllers
             }
 
         /// <summary>
+        /// שליפת עובד עם שיוכים
+        /// </summary>
+        [HttpGet("{id}/assignments")]
+        public IActionResult GetEmployeeWithAssignments(int id)
+        {
+            var employee = _service.GetEmployeeWithAssignments(id);
+            if (employee == null)
+                return NotFound("עובד לא נמצא");
+
+            return Ok(employee);
+        }
+
+        ///// <summary>
+        ///// הוספת שיוך לעובד (שליחת projectId ו-roleInProject בגוף הבקשה)
+        ///// </summary>
+        //[HttpPost("{employeeId}/assignments")]
+        //public IActionResult AddAssignmentToEmployee(int employeeId, [FromBody] ProjectAssignementDto dto)
+        //{
+        //    _service.AddAssignment();
+        //    return NoContent();
+        //}
+
+        /// <summary>
         /// הוספת עובד חדש
         /// </summary>
         [HttpPost]
-        public IActionResult AddEmployee(Employee employee)
+        public IActionResult AddEmployee(EmployeePost employee)
         {
-            var added = _service.Add(employee);
+            var added = _service.Add(_mapper.Map<Employee>(employee));
             return Ok(added);
         }
 
@@ -58,9 +85,9 @@ namespace WebApplication1.Controllers
         /// עדכון עובד קיים
         /// </summary>
         [HttpPut("{id}")]
-        public IActionResult UpdateEmployee(int id, Employee updated)
+        public IActionResult UpdateEmployee(int id, EmployeePost updated)
         {
-            var employee = _service.Update(id, updated);
+            var employee = _service.Update(id, _mapper.Map<Employee>(updated));
             if (employee == null)
                 return NotFound("עובד לא נמצא");
 
@@ -88,6 +115,7 @@ namespace WebApplication1.Controllers
             var list = _service.GetByRole(role);
             return Ok(list);
         }
+
         }
     }
 

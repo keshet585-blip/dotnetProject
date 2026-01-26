@@ -1,4 +1,5 @@
 ﻿using Clean.CORE.Entities;
+using Clean.CORE.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,18 @@ namespace Clean.CORE.Services
 {
     public interface IEmployeeService
     {
-        public IEnumerable<Employee> GetAll();
+        public IEnumerable<EmployeeDto> GetAll();
 
-        public Employee? GetById(int id);
+        public EmployeeDto? GetById(int id);
 
-        public Employee Add(Employee employee);
+        public EmployeeDto Add(Employee employee);
 
-        public Employee? Update(int id, Employee updated);
+        public EmployeeDto? Update(int id, Employee updated);
 
         public bool Delete(int id);
 
-        public IEnumerable<Employee> GetByRole(string role);
+        public IEnumerable<EmployeeDto> GetByRole(string role);
+        public EmployeeWithAssignmentsDto? GetEmployeeWithAssignments(int id);
+
     }
 }

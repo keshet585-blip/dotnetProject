@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Clean.CORE.DTO;
+using System.Collections.Generic;
 
 namespace Clean.CORE.Entities
 {
@@ -11,11 +12,14 @@ namespace Clean.CORE.Entities
         // שם הפרויקט
         public string Name { get; set; }
 
-        // תיאור קצר של הפרויקט
+        // תיאור קצר של הפרויקט  
+
         public string Description { get; set; }
 
 
         // רשימת שיוכים בין עובדים לפרויקט זה
+        //פרויקט אחד מקושר להרבה assignement
+        //השם של הפרויקט איפה מופיע הרבה? לא כאן כאן פעם אחת ולכן כאן היחיד
         public List<ProjectAssignment> Assignments { get; set; } = new();
     }
 }

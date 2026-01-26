@@ -1,4 +1,5 @@
-﻿using Clean.CORE.Entities;
+﻿using Clean.CORE.DTO;
+using Clean.CORE.Entities;
 using Clean.CORE.Repositories;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,8 @@ namespace Clean.CORE.IRepositories
     {
       
         public IEnumerable<ProjectAssignment> GetAssignmentsByProject(int projectId);
+        public IEnumerable<ProjectAssignment> GetAssignmentsByEmployee(int employeeId);
+
+
     }
 }

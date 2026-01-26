@@ -1,0 +1,77 @@
+﻿using AutoMapper;
+using Clean.CORE.DTO;
+using Clean.CORE.Entities;
+using Clean.CORE.IRepositories;
+using Clean.CORE.Repositories;
+using Clean.CORE.Services;
+using Clean.DATA.Repositories;
+using System.Collections.Generic;
+
+namespace Clean.SERVICE
+{
+    public class EmployeeService :IEmployeeService // מגדירה את הלוגיקה העיסקית עבור עובדים
+    {
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+
+        public EmployeeService(IRepositoryManager repositoryManager,IMapper mapper)
+        {
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
+        }
+
+        public IEnumerable<EmployeeDto> GetAll()
+        {
+            var list= _repositoryManager.Employees.GetAll();
+            return _mapper.Map<IEnumerable<EmployeeDto>>(list);
+        }
+
+        public EmployeeDto? GetById(int id)
+        {
+            var Employee= _repositoryManager.Employees.GetById(id);
+            return _mapper.Map<EmployeeDto>(Employee);
+        }
+
+        public EmployeeDto Add(Employee employee)
+        {
+            var newEmployee = _repositoryManager.Employees.Add(employee);
+            _repositoryManager.Save();
+            return _mapper.Map<EmployeeDto>(newEmployee);
+        }
+
+        public EmployeeDto? Update(int id, Employee updated)
+        {
+            var emp = _repositoryManager.Employees.Update(id, updated);
+            _repositoryManager.Save();
+            return _mapper.Map<EmployeeDto>(emp);
+        }
+
+        public bool Delete(int id)
+        {
+            var isDeleted = _repositoryManager.Employees.Delete(id);
+            if (isDeleted)
+            {
+                _repositoryManager.Save();
+            }
+            return isDeleted;
+        }
+
+        public IEnumerable<EmployeeDto> GetByRole(string role)
+        {
+            var list = _repositoryManager.Employees.GetByRole(role);
+            return _mapper.Map<IEnumerable<EmployeeDto>>(list);
+        }
+
+        public EmployeeDto? GetEmployeeWithAssignments(int id)
+        {
+            var emp = _repositoryManager.Employees.GetEmployeeWithAssignments(id);
+            return _mapper.Map<EmployeeDto>(emp);
+        }
+
+        public void AddAssignment(int employeeId, int projectId, string roleInProject)
+        {
+             _repositoryManager.Employees.AddAssignment(employeeId, projectId, roleInProject);
+             _repositoryManager.Save();
+        }
+    }
+}

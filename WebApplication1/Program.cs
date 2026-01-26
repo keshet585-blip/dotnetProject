@@ -1,4 +1,7 @@
 
+using AutoMapper;
+using Clean.API;
+using Clean.CORE;
 using Clean.CORE.Entities;
 using Clean.CORE.IRepositories;
 using Clean.CORE.Repositories;
@@ -6,11 +9,17 @@ using Clean.CORE.Services;
 using Clean.DATA.Data;
 using Clean.DATA.Repositories;
 using Clean.SERVICE;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -18,7 +27,15 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();//עבור הקונטרולר
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectAssignmentService, ProjectAssignmentService>();
 
-builder.Services.AddDbContext<DataContext>();
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(
+        "Server=(localdb)\\MSSQLLocalDB;Database=my_db;Trusted_Connection=True"
+    )
+);
+
+builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<DtoMappingProfile>(); cfg.AddProfile<PostMappingProfile>(); });
+
+
 
 builder.Services.AddScoped<IemployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
@@ -27,7 +44,6 @@ builder.Services.AddScoped<IProjectAssignmentRepository, ProjectAssignmentReposi
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));//כרגע לא בשימוש כי אין מחלקה שרק ממשת את rrepository בלימהוספת פונקציה משלה
 
-//builder.Services.AddSingleton<IDataContext, DataContext>();
 
 var app = builder.Build();
 

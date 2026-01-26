@@ -36,6 +36,7 @@ namespace Clean.DATA.Repositories
             return _dbSet;
         }
 
+
         public T? GetById(int id)
         {
             return _dbSet.Find(id);

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Clean.CORE.Entities;
-using Clean.SERVICE;
 using Clean.CORE.Services;
+using System;
+using AutoMapper;
+using Clean.API.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -10,10 +12,12 @@ namespace WebApplication1.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _service;
+        private readonly IMapper _mapper;
 
-        public ProjectController(IProjectService service)
+        public ProjectController(IProjectService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -23,6 +27,15 @@ namespace WebApplication1.Controllers
         public IActionResult GetAllProjects()
         {
             return Ok(_service.GetAll());
+        }
+
+        /// <summary>
+        /// שליפת כל הפרויקטים כולל שיוכים
+        /// </summary>
+        [HttpGet("with-assignments")]
+        public IActionResult GetAllWithAssignments()
+        {
+            return Ok(_service.GetAllWithAssignments());
         }
 
         /// <summary>
@@ -39,12 +52,25 @@ namespace WebApplication1.Controllers
         }
 
         /// <summary>
+        /// שליפת פרויקט כולל שיוכים
+        /// </summary>
+        [HttpGet("{id}/assignments")]
+        public IActionResult GetProjectByIdWithAssignments(int id)
+        {
+            var project = _service.GetByIdWithAssignments(id);
+            if (project == null)
+                return NotFound("פרויקט לא נמצא");
+
+            return Ok(project);
+        }
+
+        /// <summary>
         /// הוספת פרויקט חדש
         /// </summary>
         [HttpPost]
-        public IActionResult AddProject(Project project)
+        public IActionResult AddProject(ProjectPost project)
         {
-            var added = _service.Add(project);
+            var added = _service.Add(_mapper.Map<Project>(project));
             return Ok(added);
         }
 
@@ -52,16 +78,17 @@ namespace WebApplication1.Controllers
         /// עדכון פרויקט קיים
         /// </summary>
         [HttpPut("{id}")]
-        public IActionResult UpdateProject(int id, Project updated)
+        public IActionResult UpdateProject(int id, ProjectPost updated)
         {
-            var project = _service.Update(id, updated);
+            var project = _service.Update(id, _mapper.Map<Project>(updated));
             if (project == null)
                 return NotFound("פרויקט לא נמצא");
 
             return Ok(project);
         }
+
         /// <summary>
-        /// מחיקת פרוקט לפי מזהה
+        /// מחיקת פרויקט לפי מזהה
         /// </summary>
         [HttpDelete("{id}")]
         public IActionResult DeleteProject(int id)
@@ -74,7 +101,7 @@ namespace WebApplication1.Controllers
         }
 
         /// <summary>
-        /// פעולה נוספת: חיפוש פרויקטים לפי מילה בשם
+        /// חיפוש פרויקטים לפי מילה בשם
         /// </summary>
         [HttpGet("search/{keyword}")]
         public IActionResult SearchProject(string keyword)

@@ -6,17 +6,29 @@ namespace Clean.DATA.Data
 { 
     public class DataContext : DbContext, IDataContext
     {
+        public DataContext(DbContextOptions<DataContext> options)
+         : base(options)
+        {
+        }
         public DbSet<Project> Projects { get; set; }
      
         public DbSet<Employee> Employees { get; set; }
         public DbSet<ProjectAssignment> Assignments { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=my_db;Trusted_Connection=True");
+
+            // 1. הגבלת אורך של תפקיד העובד בפרויקט
+      
+
+            //// 3. טבלת ProjectAssignment עם מפתח מורכב
+            //modelBuilder.Entity<ProjectAssignment>()
+            //    .HasKey(pa => new { pa.ProjectId, pa.EmployeeId });
         }
 
-    
+
+
     }
 }
 

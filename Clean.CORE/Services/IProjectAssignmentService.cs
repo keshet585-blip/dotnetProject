@@ -1,4 +1,5 @@
 ﻿using Clean.CORE.Entities;
+using Clean.CORE.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,19 @@ namespace Clean.CORE.Services
     public interface IProjectAssignmentService
     {
 
+        public IEnumerable<ProjectAssignmentDto> GetAll();
 
-        public IEnumerable<ProjectAssignment> GetAll();
+        public ProjectAssignmentDto? GetById(int id);
 
-        public ProjectAssignment? GetById(int id);
+        public ProjectAssignmentDto Add(ProjectAssignment assignment);
 
-        public ProjectAssignment Add(ProjectAssignment assignment);
-
-        public ProjectAssignment? Update(int id, ProjectAssignment updated);
+        public ProjectAssignmentDto? Update(int id, ProjectAssignment updated);
 
         public bool Delete(int id);
 
-        public IEnumerable<ProjectAssignment> GetByProject(int projectId);
+        public IEnumerable<ProjectAssignmentDto> GetByProject(int projectId);
+
+        public IEnumerable<ProjectAssignmentDto> GetAssignmentsByEmployee(int employeeId);
+        public IEnumerable<ProjectAssignmentDto> GetAssignmentsByProject(int projectId);
     }
 }

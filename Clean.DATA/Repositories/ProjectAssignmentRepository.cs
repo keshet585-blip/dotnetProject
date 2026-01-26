@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Clean.CORE.Entities;
+﻿using Clean.CORE.Entities;
 using Clean.CORE.IRepositories;
 using Clean.DATA.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Clean.DATA.Repositories
 {
@@ -10,13 +11,32 @@ namespace Clean.DATA.Repositories
     {
         private readonly IDataContext _context;
 
-        public ProjectAssignmentRepository(DataContext context):base(context) { }
+        public ProjectAssignmentRepository(DataContext context):base(context) {
+            _context = context;
+        }
 
 
+      
+        // מביא את כל השיוכים של פרויקט מסוים כולל העובדים
         public IEnumerable<ProjectAssignment> GetAssignmentsByProject(int projectId)
         {
             return _context.Assignments
-                .Where(a => a.ProjectId == projectId);
+                           .Where(a => a.ProjectId == projectId)
+                           .Include(a => a.Employee)
+                           .Include(a => a.Project)
+                           .ToList();
         }
+
+        // מביא את כל השיוכים של עובד מסוים כולל הפרויקטים
+        public IEnumerable<ProjectAssignment> GetAssignmentsByEmployee(int employeeId)
+        {
+            return _context.Assignments
+                           .Where(a => a.EmployeeId == employeeId)
+                           .Include(a => a.Employee)
+                           .Include(a => a.Project)
+                           .ToList();
+        }
+
+   
     }
 }

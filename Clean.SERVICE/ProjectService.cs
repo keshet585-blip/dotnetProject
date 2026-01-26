@@ -3,66 +3,57 @@ using Clean.CORE.IRepositories;
 using Clean.CORE.Repositories;
 using Clean.CORE.Services;
 using System.Collections.Generic;
+using AutoMapper;
+using Clean.CORE.DTO;
 
 namespace Clean.SERVICE
 {
     public class ProjectService:IProjectService
     {
-            // מזריקים את המנהל במקום את הרפוזיטורי הישיר
             private readonly IRepositoryManager _repositoryManager;
+            private readonly IMapper _mapper;
 
-            public ProjectService(IRepositoryManager repositoryManager)
+            public ProjectService(IRepositoryManager repositoryManager, IMapper mapper)
             {
                 _repositoryManager = repositoryManager;
+                _mapper = mapper;
             }
 
-            // --- פעולות קריאה (ללא Save) ---
-
-            public IEnumerable<Project> GetAll()
+            public IEnumerable<ProjectDto> GetAll()
             {
-                return _repositoryManager.Projects.GetAll();
+                var list = _repositoryManager.Projects.GetAll();
+                return _mapper.Map<IEnumerable<ProjectDto>>(list);
             }
 
-            public Project? GetById(int id)
+            public ProjectDto? GetById(int id)
             {
-                return _repositoryManager.Projects.GetById(id);
+                var proj = _repositoryManager.Projects.GetById(id);
+                return _mapper.Map<ProjectDto>(proj);
             }
 
-            public IEnumerable<Project> Search(string keyword)
+            public IEnumerable<ProjectDto> Search(string keyword)
             {
-                return _repositoryManager.Projects.SearchProject(keyword);
+                var list = _repositoryManager.Projects.SearchProject(keyword);
+                return _mapper.Map<IEnumerable<ProjectDto>>(list);
             }
 
-            // --- פעולות כתיבה (עם Save) ---
-
-            public Project Add(Project project)
+            public ProjectDto Add(Project project)
             {
-                // 1. הוספה ל-DbSet (זיכרון)
                 var newProject = _repositoryManager.Projects.Add(project);
-
-                // 2. שמירה לדאטה בייס
                 _repositoryManager.Save();
-
-                return newProject;
+                return _mapper.Map<ProjectDto>(newProject);
             }
 
-            public Project? Update(int id, Project updated)
+            public ProjectDto? Update(int id, Project updated)
             {
-                // ביצוע העדכון ברמת הזיכרון
                 var proj = _repositoryManager.Projects.Update(id, updated);
-
-                // שמירת השינויים
                 _repositoryManager.Save();
-
-                return proj;
+                return _mapper.Map<ProjectDto>(proj);
             }
 
             public bool Delete(int id)
             {
-                // מחיקה לוגית או סימון למחיקה בזיכרון
                 bool isDeleted = _repositoryManager.Projects.Delete(id);
-
-                // אם המחיקה הצליחה (מבחינת מציאת האובייקט), שומרים את השינוי ב-DB
                 if (isDeleted)
                 {
                     _repositoryManager.Save();
@@ -70,6 +61,20 @@ namespace Clean.SERVICE
 
                 return isDeleted;
             }
+
+        public ProjectWithAssignmentsDto? GetByIdWithAssignments(int id)
+        {
+            var proj = _repositoryManager.Projects.GetByIdWithAssignments(id);
+            return _mapper.Map<ProjectWithAssignmentsDto>(proj);
         }
+
+        public IEnumerable<ProjectWithAssignmentsDto> GetAllWithAssignments()
+        {
+            var list = _repositoryManager.Projects.GetAllWithAssignments();
+            return _mapper.Map<IEnumerable<ProjectWithAssignmentsDto>>(list);
+        }
+
+   
+    }
     }
 

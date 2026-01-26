@@ -4,53 +4,73 @@ using Clean.CORE.Entities;
 using Clean.CORE.IRepositories;
 using Clean.CORE.Services;
 using Clean.CORE.Repositories;
+using AutoMapper;
+using Clean.CORE.DTO;
 
 namespace Clean.SERVICE
 {
     public class ProjectAssignmentService:IProjectAssignmentService
     {
         private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
 
-        public ProjectAssignmentService(IRepositoryManager repository)
+        public ProjectAssignmentService(IRepositoryManager repository, IMapper mapper)
         {
             _repositoryManager = repository;
+            _mapper = mapper;
         }
 
-        public IEnumerable<ProjectAssignment> GetAll() => _repositoryManager.ProjectAssignments.GetAll();
-
-        public ProjectAssignment? GetById(int id) => _repositoryManager.ProjectAssignments.GetById(id);
-
-        public ProjectAssignment Add(ProjectAssignment assignment)
+        public IEnumerable<ProjectAssignmentDto> GetAll()
         {
-            // 1. הוספה לזיכרון (ה-Repo מוסיף ל-DbSet)
+            var list = _repositoryManager.ProjectAssignments.GetAll();
+            return _mapper.Map<IEnumerable<ProjectAssignmentDto>>(list);
+        }
+
+        public ProjectAssignmentDto? GetById(int id)
+        {
+            var item = _repositoryManager.ProjectAssignments.GetById(id);
+            return _mapper.Map<ProjectAssignmentDto>(item);
+        }
+
+        public ProjectAssignmentDto Add(ProjectAssignment assignment)
+        {
             var newAssignment = _repositoryManager.ProjectAssignments.Add(assignment);
-
-            // 2. שמירה פיזית לדאטה בייס (Commit)
             _repositoryManager.Save();
-
-            return newAssignment;
+            return _mapper.Map<ProjectAssignmentDto>(newAssignment);
         }
 
-        public ProjectAssignment? Update(int id, ProjectAssignment updated)
+        public ProjectAssignmentDto? Update(int id, ProjectAssignment updated)
         {
-
             var tmp=_repositoryManager.ProjectAssignments.Update(id, updated);
             _repositoryManager.Save();
-            return tmp;
+            return _mapper.Map<ProjectAssignmentDto>(tmp);
         }
 
         public bool Delete(int id)
         {
             var isDeleted = _repositoryManager.ProjectAssignments.Delete(id);
-            if (isDeleted)
-            {
-                // שמירה רק אם המחיקה הצליחה לוגית
-                _repositoryManager.Save();
-            }
+            if (isDeleted) _repositoryManager.Save();
             return isDeleted;
-
         }
 
-        public IEnumerable<ProjectAssignment> GetByProject(int projectId) => _repositoryManager.ProjectAssignments.GetAssignmentsByProject(projectId);
+        public IEnumerable<ProjectAssignmentDto> GetByProject(int projectId)
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAssignmentsByProject(projectId);
+            return _mapper.Map<IEnumerable<ProjectAssignmentDto>>(list);
+        }
+
+        public IEnumerable<ProjectAssignmentDto> GetAssignmentsByEmployee(int employeeId)
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAssignmentsByEmployee(employeeId);
+            return _mapper.Map<IEnumerable<ProjectAssignmentDto>>(list);
+      }
+
+        public IEnumerable<ProjectAssignmentDto> GetAssignmentsByProject(int projectId)
+        {
+            var list = _repositoryManager.ProjectAssignments.GetAssignmentsByProject(projectId);
+            return _mapper.Map<IEnumerable<ProjectAssignmentDto>>(list);
+        }
+
+     
     }
 }

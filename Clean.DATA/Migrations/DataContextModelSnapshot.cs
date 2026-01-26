@@ -76,12 +76,15 @@ namespace Clean.DATA.Migrations
 
                     b.Property<string>("EmployeeRoleInProject")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ProjectId");
 
@@ -90,11 +93,26 @@ namespace Clean.DATA.Migrations
 
             modelBuilder.Entity("Clean.CORE.Entities.ProjectAssignment", b =>
                 {
-                    b.HasOne("Clean.CORE.Entities.Project", null)
+                    b.HasOne("Clean.CORE.Entities.Employee", "Employee")
+                        .WithMany("Assignments")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Clean.CORE.Entities.Project", "Project")
                         .WithMany("Assignments")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Clean.CORE.Entities.Employee", b =>
+                {
+                    b.Navigation("Assignments");
                 });
 
             modelBuilder.Entity("Clean.CORE.Entities.Project", b =>
