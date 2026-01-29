@@ -21,7 +21,12 @@ namespace Clean.CORE.Services
         public bool Delete(int id);
 
         public IEnumerable<EmployeeDto> GetByRole(string role);
+
         public EmployeeWithAssignmentsDto? GetEmployeeWithAssignments(int id);
+
+
+        //special
+        IEnumerable<RecommendedEmployeeDto> GetRecommendedEmployees(int projectId,string requiredRole);
 
     }
 }

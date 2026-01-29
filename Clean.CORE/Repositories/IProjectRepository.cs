@@ -18,5 +18,9 @@ namespace Clean.CORE.IRepositories
 
         // מביא פרויקט לפי Id כולל כל העובדים שלו
         public Project? GetByIdWithAssignments(int id);
+
+        //מביא את הפרויקט עם העובדים עם השיוכים של העובדים עבור חישוב ציון לפרויקט
+        public   Task<Project?> GetByIdWithDetailsAsync(int id);
+
     }
 }

@@ -116,6 +116,16 @@ namespace WebApplication1.Controllers
             return Ok(list);
         }
 
+
+
+        //special
+        [HttpGet("recommendations/{projectId}")]
+        public IActionResult GetRecommendations(int projectId,string requiredRole)
+        {
+            var result = _service.GetRecommendedEmployees(projectId, requiredRole);
+            return Ok(result);
         }
+
+    }
     }
 

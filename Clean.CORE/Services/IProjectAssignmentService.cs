@@ -25,5 +25,8 @@ namespace Clean.CORE.Services
 
         public IEnumerable<ProjectAssignmentDto> GetAssignmentsByEmployee(int employeeId);
         public IEnumerable<ProjectAssignmentDto> GetAssignmentsByProject(int projectId);
+
+
+      
     }
 }

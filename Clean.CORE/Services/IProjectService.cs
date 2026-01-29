@@ -24,5 +24,7 @@ namespace Clean.CORE.Services
         public IEnumerable<ProjectDto> Search(string keyword);
         public ProjectWithAssignmentsDto? GetByIdWithAssignments(int id);
         public IEnumerable<ProjectWithAssignmentsDto> GetAllWithAssignments();
+        //special
+       public  Task<ProjectStabilityDto> GetProjectStabilityAsync(int projectId);
     }
 }

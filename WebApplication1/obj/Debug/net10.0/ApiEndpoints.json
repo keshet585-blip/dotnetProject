@@ -222,6 +222,27 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WebApplication1.Controllers.EmployeeController",
+    "Method": "GetRecommendations",
+    "RelativePath": "api/employees/recommendations/{projectId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "requiredRole",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WebApplication1.Controllers.ProjectController",
     "Method": "GetAllProjects",
     "RelativePath": "api/projects",
@@ -304,6 +325,22 @@
     "ContainingType": "WebApplication1.Controllers.ProjectController",
     "Method": "GetProjectByIdWithAssignments",
     "RelativePath": "api/projects/{id}/assignments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.ProjectController",
+    "Method": "GetProjectStability",
+    "RelativePath": "api/projects/{id}/stability-analysis",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

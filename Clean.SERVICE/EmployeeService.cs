@@ -68,6 +68,26 @@ namespace Clean.SERVICE
             return _mapper.Map<EmployeeWithAssignmentsDto>(emp);
         }
 
-      
+        public IEnumerable<RecommendedEmployeeDto> GetRecommendedEmployees(int projectId,string requiredRole)
+        {
+            //שלב ראשון העובדים המתאימים רק מי שהוא בתפקיד 
+            // שליפת כל העובדים מהרפוזיטורי
+            var allEmployees = _repositoryManager.Employees.GetAll()
+                .Where(e => e.Role.ToLower() == requiredRole.ToLower());
+            // לוגיקה: מסננים עובדים שכבר משויכים לפרויקט הזה וממיינים לפי עומס
+            var recommended = allEmployees
+                .Where(e => !e.Assignments.Any(a => a.ProjectId == projectId))
+                .OrderBy(e => e.Assignments.Count)
+                .Select(e => new RecommendedEmployeeDto
+                {
+                    EmployeeId = e.Id,
+                    FullName = e.FullName,
+                    CurrentProjectCount = e.Assignments.Count,
+                    MatchReason = e.Assignments.Count == 0 ? "פנוי לחלוטין" : "עומס עבודה נמוך"
+                })
+                .Take(5); // מחזירים רק את ה-5 הכי פנויים
+
+            return recommended;
+        }
     }
 }

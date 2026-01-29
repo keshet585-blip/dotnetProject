@@ -37,5 +37,15 @@ namespace Clean.DATA.Repositories
                      .ThenInclude(a => a.Employee)
                      .FirstOrDefault(p => p.Id == id);
         }
+        public  async Task<Project?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.Projects
+                 .Include(p => p.Assignments)
+                    .ThenInclude(a => a.Employee)
+                        .ThenInclude(e => e.Assignments)
+                 .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+       
     }
 }

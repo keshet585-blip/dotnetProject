@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Clean.API.Models;
 using Clean.CORE.Entities;
 using Clean.CORE.Services;
+using Clean.SERVICE;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using AutoMapper;
-using Clean.API.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -108,6 +109,19 @@ namespace WebApplication1.Controllers
         {
             var results = _service.Search(keyword);
             return Ok(results);
+        }
+
+        /// <summary>
+        /// ניתוח יציבות הפרויקט וחיזוי סיכונים על בסיס עומס הצוות
+        /// </summary>
+        [HttpGet("{id}/stability-analysis")]
+        public async Task<IActionResult> GetProjectStability(int id)
+        {
+            var analysis = await _service.GetProjectStabilityAsync(id);
+
+            if (analysis == null)
+                return NotFound("הפרויקט המבוקש לא נמצא.");
+            return Ok(analysis);
         }
     }
 }
